@@ -5,6 +5,6 @@ public class Comment {
     private String commentText;
     private Integer userId;
     private Integer postId;
-    
+
 
 }
