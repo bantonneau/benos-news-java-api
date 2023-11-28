@@ -1,23 +1,22 @@
-package com.benosnews.benosnewsjavaapi.model;
+package com.technews.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "user")
-
 public class User implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String username;
     @Column(unique = true)
-
     private String email;
     private String password;
     @Transient
@@ -25,8 +24,12 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Post> posts;
+
+    // Need to use FetchType.LAZY to resolve multiple bags exception
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Vote> votes;
+
+    // Need to use FetchType.LAZY to resolve multiple bags exception
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments;
 
@@ -39,6 +42,7 @@ public class User implements Serializable {
         this.email = email;
         this.password = password;
     }
+
 
     public Integer getId() {
         return id;
@@ -119,11 +123,11 @@ public class User implements Serializable {
                 Objects.equals(getComments(), user.getComments());
     }
 
-
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getUsername(), getEmail(), getPassword(), isLoggedIn(), getPosts(), getVotes(), getComments());
     }
+
     @Override
     public String toString() {
         return "User{" +
@@ -137,4 +141,5 @@ public class User implements Serializable {
                 ", comments=" + comments +
                 '}';
     }
+    
 }
